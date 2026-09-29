@@ -57,6 +57,11 @@ public class CarBookingService {
         //6. Count the days with ChronoUnit.DAYS.between(startDate, endDate)
         long numberOfDaysBooked = ChronoUnit.DAYS.between(startDate, endDate);
 
+        // if start and end date are equal we will charge a one day booking
+        if(numberOfDaysBooked == 0){
+            numberOfDaysBooked = 1;
+        }
+
         //7. Calculate the price: car.getRentalPricePerDay() x numberOfDays
         BigDecimal price = car.getRentalPricePerDay().multiply(new BigDecimal(numberOfDaysBooked));
 
@@ -151,12 +156,15 @@ public class CarBookingService {
         return Arrays.copyOf(tempCarsAvailableHolder, count);
     }
 
-    public void deleteBooking(UUID bookingID){
+    public int deleteBooking(UUID bookingID){
+        int count = 0;
         CarBooking[] allBookings = carBookingDAO.getAllCarBookings();
         for(int i = 0; i < allBookings.length; i++){
             if(allBookings[i].getUuid().equals(bookingID)){
                 allBookings[i].setBookingStatus(BookingStatus.CANCELLED);
+                count++;
             }
         }
+        return count;
     }
 }

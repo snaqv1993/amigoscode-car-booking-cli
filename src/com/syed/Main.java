@@ -32,8 +32,8 @@ void main() {
             userInput = scanner.nextInt();
             scanner.nextLine();
         } catch(InputMismatchException e){
-            System.out.println("Please select a number from 1-8");
             scanner.nextLine();
+            userInput = -1;
         }
 
 
@@ -64,21 +64,34 @@ void main() {
                 }
                 break;
             case 2:
-                System.out.println("Delete booking by ID");
-                System.out.println("Enter booking id:");
-                UUID bookingIDInput = UUID.fromString(scanner.nextLine());
-                carBookingService.deleteBooking(bookingIDInput);
-                System.out.println("Booking cancelled");
+                try{
+                    System.out.println("Delete booking by ID");
+                    System.out.println("Enter booking id:");
+                    UUID bookingIDInput = UUID.fromString(scanner.nextLine());
+                    if(carBookingService.deleteBooking(bookingIDInput) > 0){
+                        System.out.println("Booking cancelled");
+                    }
+
+                }
+                catch (IllegalArgumentException e){
+                    System.out.println(e.getMessage());
+                }
                 break;
             case 3:
-                System.out.println("Get bookings for a User");
-                System.out.println("Enter user id:");
-                UUID userIDInput = UUID.fromString(scanner.nextLine());
-                CarBooking[] bookings = carBookingService.getBookingsByUser(userIDInput);
-                System.out.println("Bookings for User :");
-                for(CarBooking carBooking : bookings){
-                    System.out.println(carBooking);
+                try{
+                    System.out.println("Get bookings for a User");
+                    System.out.println("Enter user id:");
+                    UUID userIDInput = UUID.fromString(scanner.nextLine());
+                    CarBooking[] bookings = carBookingService.getBookingsByUser(userIDInput);
+                    System.out.println("Bookings for User :");
+                    for(CarBooking carBooking : bookings){
+                        System.out.println(carBooking);
+                    }
                 }
+                catch (IllegalArgumentException e){
+                    System.out.println(e.getMessage());
+                }
+
                 break;
             case 4:
                 System.out.println("Showing all bookings");
