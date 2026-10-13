@@ -1,8 +1,11 @@
 package com.syed.booking;
 
 import com.syed.car.Car;
+import com.syed.car.CarArrayDataAccessService;
+import com.syed.car.CarDAO;
 import com.syed.car.CarService;
 import com.syed.user.User;
+import com.syed.user.UserArrayDataAccessService;
 import com.syed.user.UserService;
 
 import java.math.BigDecimal;
@@ -14,22 +17,33 @@ import java.util.UUID;
 
 public class CarBookingService {
 
-    private CarBookingDAO carBookingDAO = new CarBookingDAO();
-    private CarService carService = new CarService();
+//    private CarBookingDAO carBookingDAO = new CarBookingArrayDataAccessService();
+//    private CarService carService = new CarService(new CarArrayDataAccessService());
 
+    private CarBookingDAO carBookingDAO;
+    private CarService carService;
+    private UserService userService;
+
+    public CarBookingService(CarBookingDAO carBookingDAO, CarService carService, UserService userService){
+        this.carBookingDAO = carBookingDAO;
+        this.carService = carService;
+        this.userService = userService;
+    }
+
+    //public CarBookingService(Car)
     public CarBooking bookCar(UUID userId,
                         UUID carId,
                         LocalDate startDate,
                         LocalDate endDate){
         //1. Look up the user by userId
-        UserService userService = new UserService();
+        //UserService userService = new UserService(new UserArrayDataAccessService());
         User user = userService.getUserById(userId);
         if(user == null){
             throw new IllegalArgumentException("User not found - Invalid ID");
         }
 
         //2. Look up the car by carId
-        CarService carService = new CarService();
+        //CarService carService = new CarService(new CarArrayDataAccessService());
         Car car = carService.getCarById(carId);
         if(car == null){
             throw new IllegalArgumentException("Car not found - Invalid ID");
@@ -45,7 +59,7 @@ public class CarBookingService {
         }
 
         //4. Get all current bookings
-        CarBooking[] bookings = carBookingDAO.getAllCarBookings();
+        CarBooking[] bookings = carBookingDAO.getBookings();
 
         //5. Check whether an active booking already holds this car
         for(CarBooking booking : bookings){
@@ -85,7 +99,7 @@ public class CarBookingService {
     }
 
     public CarBooking[] getAllCarBookings(){
-        return carBookingDAO.getAllCarBookings();
+        return carBookingDAO.getBookings();
     }
 
     public CarBooking[] getBookingsByUser(UUID userId){
@@ -104,21 +118,24 @@ public class CarBookingService {
 
     public Car[] getAvailableCars(){
         Car[] allCars = carService.getAllCars();
-        CarBooking[] allBookings = carBookingDAO.getAllCarBookings();
+        CarBooking[] allBookings = carBookingDAO.getBookings();
         Car[] tempCarsAvailableHolder = new Car[allCars.length];
         int count = 0;
         for(int i = 0; i < allCars.length; i++){
             Car car = allCars[i];
             boolean isBooked = false;
-            for(int j =0; j < allBookings.length; j++){
-                CarBooking carBooking = allBookings[j];
-                //System.out.println(carBooking);
-                if(carBooking.getCar().equals(car) &&
-                   carBooking.getBookingStatus().equals(BookingStatus.ACTIVE)){
-                    isBooked = true;
-                    break;
+            if(allBookings != null){
+                for(int j =0; j < allBookings.length; j++){
+                    CarBooking carBooking = allBookings[j];
+                    //System.out.println(carBooking);
+                    if(carBooking.getCar().equals(car) &&
+                            carBooking.getBookingStatus().equals(BookingStatus.ACTIVE)){
+                        isBooked = true;
+                        break;
+                    }
                 }
             }
+
             if(!isBooked){
                 tempCarsAvailableHolder[count] = car;
                 count++;
@@ -130,7 +147,7 @@ public class CarBookingService {
 
     public Car[] getAvailableElectricCars(){
         Car[] allCars = carService.getAllCars();
-        CarBooking[] allBookings = carBookingDAO.getAllCarBookings();
+        CarBooking[] allBookings = carBookingDAO.getBookings();
         Car[] tempCarsAvailableHolder = new Car[allCars.length];
         int count = 0;
         for(int i = 0; i < allCars.length; i++){
@@ -156,15 +173,11 @@ public class CarBookingService {
         return Arrays.copyOf(tempCarsAvailableHolder, count);
     }
 
-    public int deleteBooking(UUID bookingID){
-        int count = 0;
-        CarBooking[] allBookings = carBookingDAO.getAllCarBookings();
-        for(int i = 0; i < allBookings.length; i++){
-            if(allBookings[i].getUuid().equals(bookingID)){
-                allBookings[i].setBookingStatus(BookingStatus.CANCELLED);
-                count++;
-            }
-        }
-        return count;
+    public void deleteBooking(UUID bookingID){
+        carBookingDAO.deleteBooking(bookingID);
+    }
+
+    public CarBooking findBookingById(UUID bookingId){
+        return carBookingDAO.findBookingById(bookingId);
     }
 }

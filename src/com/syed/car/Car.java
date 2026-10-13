@@ -1,11 +1,13 @@
 package com.syed.car;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Car {
+public class Car implements Serializable {
 
+    private static final long serialVersionUID = 2L;
     private UUID uuid;
     private String regNumber;
     private BigDecimal rentalPricePerDay;

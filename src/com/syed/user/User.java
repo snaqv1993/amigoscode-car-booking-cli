@@ -1,10 +1,12 @@
 package com.syed.user;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
-public class User {
+public class User implements Serializable {
 
+    private static final long serialVersionUID = 3L;
     private UUID uuid;
     private String name;
 

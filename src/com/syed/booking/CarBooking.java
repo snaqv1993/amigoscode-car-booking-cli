@@ -3,14 +3,16 @@ package com.syed.booking;
 import com.syed.car.Car;
 import com.syed.user.User;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-public class CarBooking {
+public class CarBooking implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private UUID uuid;
     private User User;
     private Car car;
