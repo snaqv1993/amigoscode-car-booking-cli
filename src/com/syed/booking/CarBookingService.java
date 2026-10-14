@@ -1,11 +1,8 @@
 package com.syed.booking;
 
 import com.syed.car.Car;
-import com.syed.car.CarArrayDataAccessService;
-import com.syed.car.CarDAO;
 import com.syed.car.CarService;
 import com.syed.user.User;
-import com.syed.user.UserArrayDataAccessService;
 import com.syed.user.UserService;
 
 import java.math.BigDecimal;
@@ -16,9 +13,6 @@ import java.util.Arrays;
 import java.util.UUID;
 
 public class CarBookingService {
-
-//    private CarBookingDAO carBookingDAO = new CarBookingArrayDataAccessService();
-//    private CarService carService = new CarService(new CarArrayDataAccessService());
 
     private CarBookingDAO carBookingDAO;
     private CarService carService;
@@ -43,7 +37,6 @@ public class CarBookingService {
         }
 
         //2. Look up the car by carId
-        //CarService carService = new CarService(new CarArrayDataAccessService());
         Car car = carService.getCarById(carId);
         if(car == null){
             throw new IllegalArgumentException("Car not found - Invalid ID");
