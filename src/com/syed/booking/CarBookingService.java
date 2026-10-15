@@ -24,13 +24,12 @@ public class CarBookingService {
         this.userService = userService;
     }
 
-    //public CarBookingService(Car)
     public CarBooking bookCar(UUID userId,
                         UUID carId,
                         LocalDate startDate,
                         LocalDate endDate){
+
         //1. Look up the user by userId
-        //UserService userService = new UserService(new UserArrayDataAccessService());
         User user = userService.getUserById(userId);
         if(user == null){
             throw new IllegalArgumentException("User not found - Invalid ID");
