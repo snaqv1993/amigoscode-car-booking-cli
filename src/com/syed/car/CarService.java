@@ -4,17 +4,17 @@ import java.util.UUID;
 
 public class CarService {
 
-    private CarDAO carDAO = new CarDAO();
+    private final CarDAO carDAO;
+
+    public CarService(CarDAO carDAO){
+        this.carDAO = carDAO;
+    }
 
     public Car[] getAllCars(){
         return carDAO.getAllCars();
     }
 
     public Car getCarById(UUID carId){
-        for (Car car : carDAO.getAllCars()){
-            if(car.getUuid().equals(carId))
-                return car;
-        }
-        return null;
+        return carDAO.findCarById(carId);
     }
 }
