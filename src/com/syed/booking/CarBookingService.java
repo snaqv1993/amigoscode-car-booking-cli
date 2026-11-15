@@ -9,7 +9,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 public class CarBookingService {
@@ -51,7 +53,8 @@ public class CarBookingService {
         }
 
         //4. Get all current bookings
-        CarBooking[] bookings = carBookingDAO.getBookings();
+        //CarBooking[] bookings = carBookingDAO.getBookings();
+        List<CarBooking> bookings = carBookingDAO.getBookings();
 
         //5. Check whether an active booking already holds this car
         for(CarBooking booking : bookings){
@@ -90,35 +93,40 @@ public class CarBookingService {
         return newCarBooking;
     }
 
-    public CarBooking[] getAllCarBookings(){
+    public List<CarBooking> getAllCarBookings(){
         return carBookingDAO.getBookings();
     }
 
-    public CarBooking[] getBookingsByUser(UUID userId){
-        CarBooking[] allBookings = getAllCarBookings();
-        CarBooking[] tempCarBookingHolder = new CarBooking[allBookings.length];
+    public List<CarBooking> getBookingsByUser(UUID userId){
+        List<CarBooking> allBookings = getAllCarBookings();
+        List<CarBooking> tempCarBookingHolder = new ArrayList<>();
         int countTempCarBookingHolder = 0;
         for(CarBooking carBooking : allBookings){
             if(carBooking.getUser().getUuid().equals(userId)){
-                tempCarBookingHolder[countTempCarBookingHolder] = carBooking;
-                countTempCarBookingHolder++;
+                //tempCarBookingHolder[countTempCarBookingHolder] = carBooking;
+                //countTempCarBookingHolder++;
+                tempCarBookingHolder.add(carBooking);
             }
         }
 
-        return Arrays.copyOf(tempCarBookingHolder,countTempCarBookingHolder);
+        //return Arrays.copyOf(tempCarBookingHolder,countTempCarBookingHolder);
+        return tempCarBookingHolder;
     }
 
-    public Car[] getAvailableCars(){
-        Car[] allCars = carService.getAllCars();
-        CarBooking[] allBookings = carBookingDAO.getBookings();
-        Car[] tempCarsAvailableHolder = new Car[allCars.length];
+    public List<Car> getAvailableCars(){
+        //Car[] allCars = carService.getAllCars();
+        List<Car> allCars = carService.getAllCars();
+        List<CarBooking> allBookings = carBookingDAO.getBookings();
+        //Car[] tempCarsAvailableHolder = new Car[allCars.size()];
+        List<Car> tempCarsAvailableHolder = new ArrayList<>();
         int count = 0;
-        for(int i = 0; i < allCars.length; i++){
-            Car car = allCars[i];
+        for(int i = 0; i < allCars.size(); i++){
+            //Car car = allCars[i];
+            Car car = allCars.get(i);
             boolean isBooked = false;
             if(allBookings != null){
-                for(int j =0; j < allBookings.length; j++){
-                    CarBooking carBooking = allBookings[j];
+                for(int j =0; j < allBookings.size(); j++){
+                    CarBooking carBooking = allBookings.get(j);
                     //System.out.println(carBooking);
                     if(carBooking.getCar().equals(car) &&
                             carBooking.getBookingStatus().equals(BookingStatus.ACTIVE)){
@@ -129,25 +137,30 @@ public class CarBookingService {
             }
 
             if(!isBooked){
-                tempCarsAvailableHolder[count] = car;
-                count++;
+//                tempCarsAvailableHolder[count] = car;
+//                count++;
+                tempCarsAvailableHolder.add(car);
             }
         }
 
-        return Arrays.copyOf(tempCarsAvailableHolder, count);
+//        return Arrays.copyOf(tempCarsAvailableHolder, count);
+        return tempCarsAvailableHolder;
     }
 
-    public Car[] getAvailableElectricCars(){
-        Car[] allCars = carService.getAllCars();
-        CarBooking[] allBookings = carBookingDAO.getBookings();
-        Car[] tempCarsAvailableHolder = new Car[allCars.length];
+    public List<Car> getAvailableElectricCars(){
+        //Car[] allCars = carService.getAllCars();
+        List<Car> allCars = carService.getAllCars();
+        List<CarBooking> allBookings = carBookingDAO.getBookings();
+        //Car[] tempCarsAvailableHolder = new Car[allCars.size()];
+        List<Car> tempCarsAvailableHolder = new ArrayList<>();
         int count = 0;
-        for(int i = 0; i < allCars.length; i++){
-            Car car = allCars[i];
+        for(int i = 0; i < allCars.size(); i++){
+            //Car car = allCars[i];
+            Car car = allCars.get(i);
             boolean toExcludeFromFinalArray = false;
             if(!car.isElectric())continue;
-            for(int j =0; j < allBookings.length; j++){
-                CarBooking carBooking = allBookings[j];
+            for(int j =0; j < allBookings.size(); j++){
+                CarBooking carBooking = allBookings.get(j);
                 //System.out.println(carBooking);
                 if(carBooking.getCar().equals(car) &&
                         carBooking.getBookingStatus().equals(BookingStatus.ACTIVE)
@@ -157,12 +170,14 @@ public class CarBookingService {
                 }
             }
             if(!toExcludeFromFinalArray){
-                tempCarsAvailableHolder[count] = car;
-                count++;
+//                tempCarsAvailableHolder[count] = car;
+//                count++;
+                tempCarsAvailableHolder.add(car);
             }
         }
 
-        return Arrays.copyOf(tempCarsAvailableHolder, count);
+//        return Arrays.copyOf(tempCarsAvailableHolder, count);
+        return tempCarsAvailableHolder;
     }
 
     public void deleteBooking(UUID bookingID){

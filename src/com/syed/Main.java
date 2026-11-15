@@ -102,7 +102,7 @@ static void getAllUsers(UserService userService){
 
 static void getAvailableElectricCars(CarBookingService carBookingService){
     System.out.println("Available Electric cars");
-    Car[] availableElectricCars = carBookingService.getAvailableElectricCars();
+    List<Car> availableElectricCars = carBookingService.getAvailableElectricCars();
     for(Car car : availableElectricCars){
         System.out.println(car);
     }
@@ -110,7 +110,7 @@ static void getAvailableElectricCars(CarBookingService carBookingService){
 
 static void getAvailableCars(CarBookingService carBookingService){
     System.out.println("Available cars");
-    Car[] availableCars = carBookingService.getAvailableCars();
+    List<Car> availableCars = carBookingService.getAvailableCars();
     for(Car car : availableCars){
         System.out.println(car);
     }
@@ -118,7 +118,7 @@ static void getAvailableCars(CarBookingService carBookingService){
 
 static void showAllBookings(CarBookingService carBookingService){
     System.out.println("Showing all bookings");
-    CarBooking[] carBookings = carBookingService.getAllCarBookings();
+    List<CarBooking> carBookings = carBookingService.getAllCarBookings();
     for(CarBooking carBooking : carBookings){
         System.out.println(carBooking);
     }
@@ -128,7 +128,7 @@ static void showUserBookings(Scanner scanner, CarBookingService carBookingServic
     System.out.println("Get bookings for a User");
     System.out.println("Enter user id:");
     UUID userIDInput = UUID.fromString(scanner.nextLine());
-    CarBooking[] bookings = carBookingService.getBookingsByUser(userIDInput);
+    List<CarBooking> bookings = carBookingService.getBookingsByUser(userIDInput);
     System.out.println("Bookings for User :");
     for(CarBooking carBooking : bookings){
         System.out.println(carBooking);

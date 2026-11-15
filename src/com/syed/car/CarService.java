@@ -1,5 +1,6 @@
 package com.syed.car;
 
+import java.util.List;
 import java.util.UUID;
 
 public class CarService {
@@ -10,7 +11,7 @@ public class CarService {
         this.carDAO = carDAO;
     }
 
-    public Car[] getAllCars(){
+    public List<Car> getAllCars(){
         return carDAO.getAllCars();
     }
 
